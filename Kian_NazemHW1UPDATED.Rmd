@@ -1,0 +1,59 @@
+```{r}
+library(readxl)
+library(openxlsx)
+library(ggplot2)
+Typical_Employee_Survey_Data <- read_excel("/Users/kiannazem/Downloads/Typical_Employee_Survey_Data.xlsx", col_names = FALSE)
+print(Typical_Employee_Survey_Data)
+add_header_row <- function(data) {
+  colnames(data) <- c(
+    "Age", "Gender", "Job_Satisfaction", "Most_Important_Job_Characteristic", 
+    "Years_Worked_for_Present_Employer", "Likelihood_of_Promotion", 
+    "Participation_in_Decision_Making", "Participation_in_Budgetary_Decisions", 
+    "Pride_in_Working_for_the_Organization", "Likelihood_of_Turning_Down_Another_Job", 
+    "Workplace_Relations_Between_Coworkers_and_Colleagues"
+  )
+  return(data)
+}
+Typical_Employee_Survey_Data <- add_header_row(Typical_Employee_Survey_Data)
+
+print(head(Typical_Employee_Survey_Data))
+
+factor_columns <- c(
+  "Gender", "Job_Satisfaction", "Most_Important_Job_Characteristic", 
+  "Likelihood_of_Promotion", "Participation_in_Decision_Making", 
+  "Participation_in_Budgetary_Decisions", "Pride_in_Working_for_the_Organization", 
+  "Likelihood_of_Turning_Down_Another_Job", "Workplace_Relations_Between_Coworkers_and_Colleagues"
+)
+
+Typical_Employee_Survey_Data[factor_columns] <- lapply(Typical_Employee_Survey_Data[factor_columns], as.factor)
+summary(Typical_Employee_Survey_Data)
+plot_histogram <- function(data, column, title) {
+  ggplot(data, aes_string(x = column)) +
+    geom_histogram(binwidth = 1, fill = "blue", color = "black") +
+    ggtitle(title) + theme_minimal()
+}
+plot_bar <- function(data, column, title) {
+  ggplot(data, aes_string(x = column)) +
+    geom_bar(fill = "orange") +
+    ggtitle(title) + theme_minimal()
+}
+plot_histogram(Typical_Employee_Survey_Data, "Age", "Histogram of Age")
+plot_histogram(Typical_Employee_Survey_Data, "Years_Worked_for_Present_Employer", "Histogram of Years Worked for Present Employer")
+
+plot_bar(Typical_Employee_Survey_Data, "Gender", "Bar Plot of Gender")
+plot_bar(Typical_Employee_Survey_Data, "Job_Satisfaction", "Bar Plot of Job Satisfaction")
+plot_bar(Typical_Employee_Survey_Data, "Most_Important_Job_Characteristic", "Bar Plot of Most Important Job Characteristic")
+plot_bar(Typical_Employee_Survey_Data, "Likelihood_of_Promotion", "Bar Plot of Likelihood of Promotion")
+plot_bar(Typical_Employee_Survey_Data, "Participation_in_Decision_Making", "Bar Plot of Participation in Decision Making")
+plot_bar(Typical_Employee_Survey_Data, "Participation_in_Budgetary_Decisions", "Bar Plot of Participation in Budgetary Decisions")
+plot_bar(Typical_Employee_Survey_Data, "Pride_in_Working_for_the_Organization", "Bar Plot of Pride in Working for the Organization")
+
+plot_bar(Typical_Employee_Survey_Data, "Likelihood_of_Turning_Down_Another_Job", "Bar Plot of Likelihood of Turning Down Another Job")
+plot_bar(Typical_Employee_Survey_Data, "Workplace_Relations_Between_Coworkers_and_Colleagues", "Bar Plot of Workplace Relations Between Coworkers and Colleagues")
+
+plot_scatter <- function(data) {
+  numeric_cols <- names(data)[sapply(data, is.numeric)]
+  pairs(data[, numeric_cols], main = "Scatter Plots of Numerical Columns")
+}
+plot_scatter(Typical_Employee_Survey_Data)
+```
